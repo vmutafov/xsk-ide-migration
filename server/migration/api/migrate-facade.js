@@ -7,7 +7,17 @@ class MigrationFacade {
         console.log("Migration facade initialized");
         this.migrationController = new MigrationController();
         this.tunnelController = new TunnelController();
-        
+    }
+
+    startProcess() {
+        var process = require('bpm/v4/process');
+        console.log("!!! VM: starting process");
+        process.start('migrationProcess', {"variable1": "value1"});
+        console.log("!!! VM: started process");
+    }
+
+    selectDeliveryUnitAndWorkspaceForProcess() {
+
     }
 
     setupConnection(ctx, req, res) {
