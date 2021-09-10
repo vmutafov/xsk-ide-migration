@@ -14,42 +14,50 @@ const config = require("core/v4/configurations");
 
 const neoClientPath = config.get("user.dir") + "/target/dirigible/resources-neo-sdk/tools/neo.sh";
 
-class NeoTunnelService {
+class NeoDatabasesService {
 
-  openTunnel(credentials, completion) {
+  getAvailableDatabases(credentials) {
     const account = credentials.account;
     const host = credentials.host;
     const user = credentials.user;
     const password = credentials.password;
     const db = credentials.db;
 
-    const script = `${neoClientPath} open-db-tunnel -a "${account}" -h "${host}" -u "${user}" -p "${password}" -i "${db}" --output json --background`;
-
+    const script = `${neoClientPath} list-schemas -a "${account}" -h "${host}" -u "${user}" -p "${password}" --output json`
+    
     const rawCommandResult = exec.exec(script, {
       "JAVA_HOME": config.get("JAVA8_HOME"),
       "PATH": config.get("JAVA8_HOME") + "/bin:" + config.get("PATH")
     });
 
     const commandResult = JSON.parse(rawCommandResult);
-    console.log(commandResult)
+
     if (commandResult.errorMsg) {
       throw "[NEO CLIENT ERROR]" + neoOutput.errorMsg
     }
 
-    if (completion) {
-      completion(null, commandResult.result);
-    } else {
-      return commandResult.result;
-    }
+    const rawDatabasesOutput = commandResult.commandOutput;
+    const databases = this._parseDatabasesOutput(rawDatabasesOutput);
+
+    return databases;
   }
 
-  closeTunnel(sessionId) {
-    const script = `${neoClientPath} close-db-tunnel --session-id ${sessionId}`;
-    exec.exec(script, {
-      "JAVA_HOME": config.get("JAVA8_HOME"),
-      "PATH": config.get("JAVA8_HOME") + "/bin:" + config.get("PATH")
-    });
+  _parseDatabasesOutput(databasesOutput) {
+    // const databasesOutput = "\nWarning: Your SDK version \"4.2.4\" is no longer supported. The latest version is \"4.9.4\" and upgrade is highly recommended.\n\n\nSchema ID\n  slbinno\n  slbinno2\n"
+    const schemaIdText = "Schema ID";
+    const schemaIndex = databasesOutput.indexOf(schemaIdText);
+    
+    let databasesRawList = databasesOutput.substring(schemaIndex + schemaIdText.length);
+    databasesRawList = databasesRawList.replace(/[\r\n]+/g,"");
+    databasesRawList = databasesRawList.replace(/[\s]+/g, ",");
+    
+    const databasesList = databasesRawList
+        .split(",")
+        .filter(x => x !== undefined && x !== null && x !== "")
+        .map(x => x.trim());
+
+    return databasesList;
   }
 }
 
-module.exports = NeoTunnelService;
+module.exports = NeoDatabasesService;

@@ -1,13 +1,13 @@
 /*
- * Copyright (c) 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
+ * Copyright (c) 2021 SAP SE or an SAP affiliate company and XSK contributors
  *
  * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v2.0
+ * are made available under the terms of the Apache License, v2.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v20.html
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * SPDX-FileCopyrightText: 2010-2021 SAP SE or an SAP affiliate company and Eclipse Dirigible contributors
- * SPDX-License-Identifier: EPL-2.0
+ * SPDX-FileCopyrightText: 2021 SAP SE or an SAP affiliate company and XSK contributors
+ * SPDX-License-Identifier: Apache-2.0
  */
 migrationLaunchView.controller('DeliveryUnitViewController', ['$scope', '$http', '$messageHub', function ($scope, $http, $messageHub) {
     $scope.isVisible = false;
@@ -27,24 +27,24 @@ migrationLaunchView.controller('DeliveryUnitViewController', ['$scope', '$http',
     ];
     $scope.descriptionText = descriptionList[0];
     let connectionId = undefined;
-    let processId = undefined;
     let neoData = undefined;
     let hanaData = undefined;
     let defaultErrorTitle = "Error loading delivery units";
     let defaultErrorDesc = "Please check if the information you provided is correct and try again.";
+    let processId = undefined;
 
     function getDUData() {
         body = {
             neo: neoData,
-            hana: hanaData
+            hana: hanaData,
+            processInstanceId: processId
         }
 
         $http.post(
-            "/services/v4/js/ide-migration/server/migration/api/migration-rest-api.js/start-process",
+            "/services/v4/js/ide-migration/server/migration/api/migration-rest-api.js/continue-process",
             JSON.stringify(body),
             { headers: { 'Content-Type': 'application/json' } }
         ).then(function (response) {
-            processId = body.processInstanceId = response.data.processInstanceId;
             const timer = setInterval(function(){
               $http.post(
                           "/services/v4/js/ide-migration/server/migration/api/migration-rest-api.js/get-process",
@@ -173,6 +173,7 @@ migrationLaunchView.controller('DeliveryUnitViewController', ['$scope', '$http',
         }
         if ("hanaData" in msg.data) {
             hanaData = msg.data.hanaData;
+            processId = msg.data.hanaData.processId;
             getDUData();
         }
         if ("getData" in msg.data) {
