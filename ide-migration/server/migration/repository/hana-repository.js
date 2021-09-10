@@ -156,7 +156,10 @@ class HanaRepository {
         let deduped = new Map();
 
         fileList.forEach(function (file) {
-            deduped.set(file._packageName + '::' + file._name + '::' + file._suffix, file);
+            // TODO: check why we receive 'undefined' files here
+            if (file) {
+                deduped.set(file._packageName + '::' + file._name + '::' + file._suffix, file);
+            }
         });
 
         let dedupedList = Array.from(deduped.values());
