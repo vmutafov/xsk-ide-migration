@@ -3,8 +3,10 @@
 	<modelVersion>4.0.0</modelVersion>
 
   <name>XSK - IDE - Migration</name>
+  <groupId>dirigiblelabs</groupId>
   <artifactId>xsk-ide-migration</artifactId>
   <version>0.13.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
 
   <dependencies>
     <dependency>
@@ -15,7 +17,7 @@
     <dependency>
       <groupId>org.eclipse.dirigible</groupId>
       <artifactId>dirigible-api</artifactId>
-      <version>${dirigible.version}</version>
+      <version>6.1.11</version>
       <exclusions>
         <exclusion>
           <groupId>com.google.code.gson</groupId>
@@ -26,7 +28,7 @@
     <dependency>
       <groupId>org.eclipse.dirigible</groupId>
       <artifactId>dirigible-commons-api</artifactId>
-      <version>${dirigible.version}</version>
+      <version>6.1.11</version>
       <exclusions>
         <exclusion>
           <groupId>com.google.code.gson</groupId>
@@ -37,19 +39,19 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>${junit.version}</version>
+      <version>4.13.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.eclipse.dirigible</groupId>
       <artifactId>dirigible-commons-test</artifactId>
-      <version>${dirigible.version}</version>
+      <version>6.1.11</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.eclipse.dirigible</groupId>
       <artifactId>dirigible-engine-javascript-graalvm</artifactId>
-      <version>${dirigible.version}</version>
+      <version>6.1.11</version>
     </dependency>
     <dependency>
       <groupId>com.sap.xsk</groupId>
@@ -84,7 +86,7 @@
     <dependency>
       <groupId>org.eclipse.dirigible</groupId>
       <artifactId>dirigible-repository-local</artifactId>
-      <version>${dirigible.version}</version>
+      <version>6.1.11</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
